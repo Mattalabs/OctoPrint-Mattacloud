@@ -1,7 +1,7 @@
 # OctoPrint-Mattacloud
 
 <p align="center">
-    <img src="extras/images/mattacloud-screens.png" alt="Mattacloud by Mattalabs">
+    <img src="extras/images/mattacloud.png" alt="Mattacloud by Mattalabs">
     <br/>
     <i>Add automatic error detection and remote access for your 3D printer.</i>
     <br/>
@@ -9,7 +9,7 @@
 
 Automatic and intelligent error detection and process monitoring for your OctoPrint-enabled 3D printer, with full remote control, management and access from anywhere. Additionally, receive notifications and updates via your chosen communication medium, alerting you of failures and keeping you updated on the state of the 3D print. Overview your print history and gain insights into filament use, print times and your printer reliability.
 
-Learn more about **mattacloud** and its features - [https://mattalabs.com/products/mattacloud/](https://mattalabs.com/products/mattacloud/)
+Learn more about **Mattacloud** and its features - [https://mattalabs.com/products/mattacloud/](https://mattalabs.com/products/mattacloud/)
 
 ### Error detection and process monitoring
 
@@ -71,12 +71,12 @@ After downloading the zip file of the latest release, install it using the OctoP
 
 ## Setup
 
-The setup progress takes less than 5 minutes and consists of 5 simple steps. If you follow these, all the benefits of **mattacloud** will apply to your printer. Happy printing!
+The setup progress takes less than 5 minutes and consists of 5 simple steps. If you follow these, all the benefits of **Mattacloud** will apply to your printer. Happy printing!
 
-1. Join the **mattacloud** free trial ([here](https://mattalabs.com/accounts/signup/)) or if you already have, just [login](https://mattalabs.com/accounts/login/). (Free trial lasts for the duration of beta testing.)
+1. Join the **Mattacloud** free trial ([here](https://cloud.mattalabs.com/accounts/signup/)) or https://cloud.mattalabs.com/accounts/signup/if you already have, just [login](https://cloud.mattalabs.com/accounts/login/). (Free trial lasts for the duration of beta testing.)
 2. Select your membership type - at this stage it is recommended to choose the free beta membership.
-3. Add a printer to your **mattacloud** by following the wizard and setup guide.
-4. After installing the OctoPrint-Mattacloud Plugin on your OctoPrint enabled device, copy the authentication token from your newly created printer on the **mattacloud** into the authentication token input box presented in the OctoPrint-Mattacloud Plugin tab. You can see all of your printers and their respective tokens [here](https://mattalabs.com/accounts/printers/list/).
+3. Add a printer to your **Mattacloud** by following the wizard and setup guide.
+4. After installing the OctoPrint-Mattacloud Plugin on your OctoPrint enabled device, copy the authentication token from your newly created printer on the **Mattacloud** into the authentication token input box presented in the OctoPrint-Mattacloud Plugin tab. You can see all of your printers and their respective tokens [here](https://cloud.mattalabs.com/printer-dashboard/).
 5. Test your token using the _Test Token_ button adjacent to the input box.
 
 ## Report problems
