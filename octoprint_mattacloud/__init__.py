@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # coding = utf - 8
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import cgi
 import datetime
@@ -52,7 +52,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
     def get_settings_defaults(self):
         return dict(
             enabled=True,
-            base_url="https://mattalabs.com/",
+            base_url="https://cloud.mattalabs.com/",
             authorization_token="e.g. w1il4li2am2ca1xt4on91",
             upload_dir="/home/pi/.octoprint/uploads/",
             config_print=False,
@@ -868,7 +868,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
 
 
 __plugin_name__ = "Mattacloud"
-
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 def __plugin_load__():
     global __plugin_implementation__
