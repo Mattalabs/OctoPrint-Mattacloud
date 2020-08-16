@@ -44,7 +44,7 @@ async def offer(request):
             await pc.close()
             pcs.discard(pc)
 
-    options = {"framerate": "30", "video_size": "640x480"}
+    options = {"framerate": "5", "video_size": "640x360"}
     if platform.system() == "Darwin":
         player = MediaPlayer("default:none", format="avfoundation", options=options)
     else:
