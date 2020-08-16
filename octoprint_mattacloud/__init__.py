@@ -26,7 +26,8 @@ from octoprint.filemanager.util import StreamWrapper, DiskFileWrapper
 from .ws import Socket
 from .printer import Printer
 from .backoff import BackoffTime
-
+from .webcam import webrtc_loop
+import asyncio
 
 class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                        octoprint.plugin.SettingsPlugin,
@@ -48,6 +49,9 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         self.sentry = sentry_sdk.init(
             "https://878e280471064d3786d9bcd063e46ad7@sentry.io/1850943"
         )
+        loop = asyncio.new_event_loop()
+        webrtc_thread = threading.Thread(target=webrtc_loop, args=(loop,), daemon=True)
+        webrtc_thread.start()
 
     def get_settings_defaults(self):
         return dict(
