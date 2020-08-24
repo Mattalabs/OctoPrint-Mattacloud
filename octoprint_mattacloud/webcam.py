@@ -32,23 +32,24 @@ async def javascript(request):
 async def offer(request):
     params = await request.json()
     offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-    print(request)
     pc = RTCPeerConnection()
     pcs.add(pc)
 
     @pc.on("iceconnectionstatechange")
     async def on_iceconnectionstatechange():
         print("ICE connection state is %s" % pc.iceConnectionState)
-        print(request)
         if pc.iceConnectionState == "failed":
             await pc.close()
             pcs.discard(pc)
 
-    options = {"framerate": "5", "video_size": "640x360"}
+    # options = {"framerate": "5", "video_size": "640x360"}
+    options = {"framerate": "30", "video_size": "1280x720"}
     if platform.system() == "Darwin":
-        player = MediaPlayer("default:none", format="avfoundation", options=options)
+        player = MediaPlayer("http://octopi.local:8080/?action=stream")
+        # player = MediaPlayer("default:none", format="avfoundation", options=options)
     else:
-        player = MediaPlayer("/dev/video0", format="v4l2", options=options)
+        player = MediaPlayer("http://octopi.local:8080/?action=stream")
+        # player = MediaPlayer("/dev/video0", format="v4l2", options=options)
 
     await pc.setRemoteDescription(offer)
     for t in pc.getTransceivers():
