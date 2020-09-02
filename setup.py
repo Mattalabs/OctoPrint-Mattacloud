@@ -19,24 +19,26 @@ plugin_version = "0.1.0"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
-plugin_description = """Error detection and remote 3D printer management for OctoPrint"""
+plugin_description = """Remote 3D printer management for OctoPrint with AI error detection"""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Douglas Brion"
+plugin_author = "Mattalabs"
 
 # The plugin's author's mail address.
 plugin_author_email = "hello@mattalabs.com"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
-plugin_url = "https://github.com/dougbrion/OctoPrint-Mattacloud"
+plugin_url = "https://github.com/Mattalabs/OctoPrint-Mattacloud"
 
 # The plugin's license. Can be overwritten within OctoPrint's internal data via __plugin_license__ in the plugin module
 plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = [
-    "ndg-httpsclient",
     "requests-toolbelt",
+    "aiohttp",
+    "aiortc",
+    "opencv-python",
 ]
 
 # --------------------------------------------------------------------------------------------------------------------
