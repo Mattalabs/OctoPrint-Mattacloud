@@ -26,7 +26,8 @@ from octoprint.filemanager.util import StreamWrapper, DiskFileWrapper
 from .ws import Socket
 from .printer import Printer
 from .backoff import BackoffTime
-
+from .webcam import webrtc_loop
+import asyncio
 
 class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                        octoprint.plugin.SettingsPlugin,
@@ -48,6 +49,9 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         self.sentry = sentry_sdk.init(
             "https://878e280471064d3786d9bcd063e46ad7@sentry.io/1850943"
         )
+        loop = asyncio.new_event_loop()
+        webrtc_thread = threading.Thread(target=webrtc_loop, args=(loop,), daemon=True)
+        webrtc_thread.start()
 
     def get_settings_defaults(self):
         return dict(
@@ -490,6 +494,26 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                         self._logger.warning(
                             "Incorrect type file/folder provided: %s",
                             json_msg["type"].lower())
+            if json_msg["cmd"].lower() == "webrtc_start_server_printer":
+                try:
+                    resp = requests.post(
+                        url="http://127.0.0.1:8888/offer",
+                        data=json.dumps(json_msg),
+                        headers={
+                            'Content-Type': 'application/json'
+                        },
+                    )
+                    resp.raise_for_status()
+                    webrtc_resp = {
+                        "webrtc_reply_printer_server": json.loads(resp.content)
+                    }
+                    self._logger.info("BEFORE WS SEND")
+                    msg = self.ws_data(extra_data=webrtc_resp)
+                    self.ws.send_msg(msg)
+                    self._logger.info("AFTER WS SEND")
+                except requests.exceptions.RequestException as e:
+                    self._logger.error(e)
+
 
     def process_response(self, resp):
         # TODO: Handle different types of response
