@@ -7,31 +7,19 @@
         <hr>
         <h4>Hello Mattacloud user!</h4>
         <p class="description">
-            To use this OctoPrint enabled printer with the mattacloud you need provide a valid authentication token.
-            You can unlink this device from the Mattacloud at anytime by removing the token. You can also switch Mattacloud on and off using the toggle found on this plugins tab.
+            To use this OctoPrint enabled printer with Mattacloud you need provide a valid authorization token.
+            You can unlink this device from the Mattacloud at anytime by removing the token. You can also switch Mattacloud on and off using the toggle found on this plugin's tab.
         </p>
         <p class="description">
-            Enter your authentication token in the box below. You can find your printer's token by logging in to your Mattacloud account. <a target="_blank" href="https://mattalabs.com/accounts/login/">Login</a>
+            Enter your authorization token in the box below. You can find your printer's token by logging in to your Mattacloud account. <a target="_blank" href="https://cloud.mattalabs.com/accounts/login/">Login</a>
         </p>
         <form>
             <div class="control-group">
                 <label class="control-label">{{ _('Authorization Token') }}</label>
                 <div class="controls">
                     <input id="settings_token_input" type="text" class="mattacloud-input-box d-inline-block" data-bind="value: auth_token">
-                    <button id="settings_test_btn" class="btn btn-primary test-btn test-auth-token d-inline-block" type="button"><i id="settings_test_btn_spin" class="fa fa-spinner fa-spin" style="display: none;"></i>Test Token</button>
-                    <div class="small-text-div"><small>Don't have an account? Sign up to bring intelligence to your 3D printer. <a target="_blank" href="https://mattalabs.com/accounts/signup/">Sign Up</a></small></div>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">{{ _('Server Address') }}</label>
-                <div class="controls">
-                    <input id="settings_url_input" type="text" class="mattacloud-input-box" id="base-url" data-bind="value: server_address">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">{{ _('Upload Directory') }}</label>
-                <div class="controls">
-                    <input type="text" class="mattacloud-input-box" id="upload-dir" data-bind="value: upload_dir">
+                    <button id="settings_test_btn" class="btn btn-primary test-btn test-auth-token d-inline-block" type="button"><i id="settings_test_btn_spin" class="fa fa-spinner fa-spin" style="display: none;"></i>Activate</button>
+                    <div class="small-text-div"><small>Paste your copied Mattacloud authorization token in here and click "Activate".<br>Don't have an account? Sign up to bring intelligence to your 3D printer. <a target="_blank" href="https://cloud.mattalabs.com/accounts/signup/">Sign Up</a></small></div>
                 </div>
             </div>
             <div class="control-group">
@@ -46,6 +34,7 @@
                     <label class="control-label">{{ _('Primary Camera Snapshot URL') }}</label>
                     <div class="controls">
                         <input type="text" class="mattacloud-input-box" id="snapshot-url-1" data-bind="value: snapshot_url_1">
+                        <div class="small-text-div"><small>We recommend an interval of around 30 seconds.<br>For real-time video use Mattacloud's stream functionality.</small></div>
                     </div>
                 </div>
                 <div class="mattacloud-inline-control-group">
@@ -61,6 +50,7 @@
                     <label class="control-label">{{ _('Secondary Camera Snapshot URL') }}</label>
                     <div class="controls">
                         <input type="text" class="mattacloud-input-box" id="snapshot-url-2" data-bind="value: snapshot_url_2">
+                        <div class="small-text-div"><small>The Mattacloud Beta does not work with a secondary camera.<br>Will be coming soon with future plans!</small></div>
                     </div>
                 </div>
                 <div class="mattacloud-inline-control-group">

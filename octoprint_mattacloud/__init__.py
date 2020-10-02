@@ -13,6 +13,7 @@ import threading
 import time
 import logging
 import re
+import asyncio
 
 import flask
 import requests
@@ -22,12 +23,12 @@ import sentry_sdk
 import octoprint.plugin
 from octoprint.filemanager import FileDestinations
 from octoprint.filemanager.util import StreamWrapper, DiskFileWrapper
+from octoprint.util import to_bytes, to_unicode
 
 from .ws import Socket
 from .printer import Printer
 from .backoff import BackoffTime
 from .webcam import webrtc_loop
-import asyncio
 
 class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                        octoprint.plugin.SettingsPlugin,
@@ -259,21 +260,24 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
 
     def ws_connect(self):
         self._logger.info("Connecting websocket")
-        self.ws = Socket(
-            on_open=lambda ws: self.ws_on_open(ws),
-            on_message=lambda ws, msg: self.ws_on_message(
-                ws, msg),
-            on_close=lambda ws: self.ws_on_close(ws),
-            on_error=lambda ws, error: self.ws_on_error(
-                ws, error),
-            url=self.get_ws_url(),
-            token=self.get_auth_token()
-        )
-        ws_thread = threading.Thread(target=self.ws.run)
-        ws_thread.daemon = True
-        ws_thread.start()
-        time.sleep(3)
-        self._logger.info(str(self.ws))
+        try:
+            self.ws = Socket(
+                on_open=lambda ws: self.ws_on_open(ws),
+                on_message=lambda ws, msg: self.ws_on_message(
+                    ws, msg),
+                on_close=lambda ws: self.ws_on_close(ws),
+                on_error=lambda ws, error: self.ws_on_error(
+                    ws, error),
+                url=self.get_ws_url(),
+                token=self.get_auth_token()
+            )
+            ws_thread = threading.Thread(target=self.ws.run)
+            ws_thread.daemon = True
+            ws_thread.start()
+            time.sleep(3)
+        except Exception as e:
+            self._logger.error("ws_on_close: %s", e)
+            pass
 
     def ws_available(self):
         if self.is_enabled() and hasattr(self, "ws"):
@@ -329,6 +333,14 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                     except Exception as e:
                         self._logger.error("ws_on_message: %s", e)
                         pass
+            elif json_msg["state"].lower() == "inactive":
+                self.active_online = False
+                try:
+                    requests.post(
+                        url="http://127.0.0.1:8888/close",
+                    )
+                except requests.exceptions.RequestException as e:
+                    self._logger.error(e)
             else:
                 self.active_online = False
         self.update_ws_send_interval()
@@ -495,6 +507,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                             "Incorrect type file/folder provided: %s",
                             json_msg["type"].lower())
             if json_msg["cmd"].lower() == "webrtc_start_server_printer":
+                self._logger.info("Received \"webrtc_start_server_printer\" cmd")
                 try:
                     resp = requests.post(
                         url="http://127.0.0.1:8888/offer",
@@ -507,10 +520,9 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                     webrtc_resp = {
                         "webrtc_reply_printer_server": json.loads(resp.content)
                     }
-                    self._logger.info("BEFORE WS SEND")
+                    self._logger.info("Sending \"webrtc_reply_printer_server\" cmd")
                     msg = self.ws_data(extra_data=webrtc_resp)
                     self.ws.send_msg(msg)
-                    self._logger.info("AFTER WS SEND")
                 except requests.exceptions.RequestException as e:
                     self._logger.error(e)
 
@@ -520,8 +532,10 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         content_disposition = resp.headers["Content-Disposition"]
         value, params = cgi.parse_header(content_disposition)
         filename = params["filename"]
+        filename = to_bytes(filename)
         file_content = resp.text.replace("\\n", "\n")
-        stream = io.StringIO(file_content, newline="\n")
+        file_content = to_bytes(file_content)
+        stream = io.BytesIO(file_content)
         stream_wrapper = StreamWrapper(filename, stream)
 
         try:
@@ -541,10 +555,12 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         reselect = self._printer.is_current_file(
             future_full_path_in_storage, False)
         # Destination both local and SD card.
+        # filename = filename.encode()
         path = self._file_manager.add_file(destination=FileDestinations.LOCAL,
-                                           path=filename,
-                                           file_object=stream_wrapper,
-                                           allow_overwrite=True)
+                                        path=filename,
+                                        file_object=stream_wrapper,
+                                        allow_overwrite=True)
+
         if os.path.exists(path):
             try:
                 os.remove(path)
@@ -553,8 +569,8 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
 
         if reselect:
             self._printer.select_file(self._file_manager.path_on_disk(FileDestinations.LOCAL,
-                                                                      added_file),
-                                      False)
+                                                                    added_file),
+                                                                    False)
         return path
 
     def make_timestamp(self):
