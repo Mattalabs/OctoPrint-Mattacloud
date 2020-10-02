@@ -51,7 +51,6 @@ $(function() {
 
     self.auth_token = ko.observable();
     self.server_address = ko.observable();
-    self.upload_dir = ko.observable();
     self.enabled_value = ko.observable();
     self.config_print = ko.observable();
     self.ws_connected = ko.observable();
@@ -78,10 +77,6 @@ $(function() {
 
     self.server_address.subscribe(function(new_server_url) {
       self.settings.settings.plugins.mattacloud.base_url(new_server_url);
-    });
-
-    self.upload_dir.subscribe(function(new_dir) {
-      self.settings.settings.plugins.mattacloud.upload_dir(new_dir);
     });
 
     self.num_cameras.subscribe(function(num_cams) {
@@ -234,7 +229,6 @@ $(function() {
         self.settings.settings.plugins.mattacloud.authorization_token()
       );
       self.server_address(self.settings.settings.plugins.mattacloud.base_url());
-      self.upload_dir(self.settings.settings.plugins.mattacloud.upload_dir());
       self.config_print(
         self.settings.settings.plugins.mattacloud.config_print()
       );

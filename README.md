@@ -3,7 +3,7 @@
 <p align="center">
     <img src="extras/images/mattacloud.png" alt="Mattacloud by Mattalabs">
     <br/>
-    <i>Add automatic error detection and remote access for your 3D printer.</i>
+    <i>Add complete remote control and monitoring and A.I. error detection to your 3D printer.</i>
     <br/>
 </p>
 
@@ -11,13 +11,61 @@ Automatic and intelligent error detection and process monitoring for your OctoPr
 
 Learn more about **Mattacloud** and its features - [https://mattalabs.com/products/mattacloud/](https://mattalabs.com/products/mattacloud/)
 
+## Plugin Installation
+
+The easiest way to get OctoPrint-Mattacloud is to download the Raspbian based SD card image for the Raspberry Pi which contains OctoPrint along with everything required for Mattacloud to run smoothly. The image also uses Python 3, so if you need to upgrade from Python 2 why not check it out!
+
+Due to Python 2's EOL status, OctoPrint-Mattacloud requires you to be running **Python 3**. If you are still running OctoPrint with Python 2 you should probably upgrade anyway. Here is a blog post outlining the upgrading process [https://octoprint.org/blog/2020/09/10/upgrade-to-py3/](https://octoprint.org/blog/2020/09/10/upgrade-to-py3/).
+
+OctoPrint-Mattacloud uses WebRTC to enable real-time video streams from the printer to your device. In order to utilise this capability a few additional packages need to be installed on your Raspberry Pi (or other device) running OctoPrint.
+
+If you are not using the Mattacloud SD image then you need to install the following packages:
+
+```
+sudo apt install libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libavfilter-dev libswscale-dev libswresample-dev python-dev python3-dev libsrtp2-dev libsrtp2-1 libopus-dev libvpx-dev pkg-config
+```
+
+Currently, the OctoPrint-Mattacloud plugin has not been uploaded to OctoPrint plugin repository, and as such requires manual installation from this GitHub repo.
+
+Activate your Python 3 virtualenv where OctoPrint is installed. It will be something like ```source oprint/bin/activate```. Then install the plugin.
+
+```
+pip install git+https://github.com/Mattalabs/OctoPrint-Mattacloud
+```
+
+When the plugin has installed, restart OctoPrint and begin the Printer Setup process outlined below.
+
+## Printer Setup
+
+The setup progress takes less than 5 minutes and consists of 5 simple steps. If you follow these, all the benefits of **Mattacloud** will apply to your printer. Happy printing!
+
+1. [Sign up](https://cloud.mattalabs.com/accounts/signup/) to the **Mattacloud** free beta trial. If you already have, just [login](https://cloud.mattalabs.com/accounts/login/). (Trial lasts for the duration of beta testing.)
+2. Select your membership type - at this stage you can only choose the free beta membership.
+3. Add a printer to your **Mattacloud** by following the setup guide.
+4. After installing the OctoPrint-Mattacloud Plugin on your OctoPrint enabled device, copy the authorization token from your newly created printer on **Mattacloud** into the authorization token input box presented in the OctoPrint-Mattacloud plugin settings. You can see all of your printers and their respective tokens [here](https://cloud.mattalabs.com/printer-dashboard/).
+5. Test your token using the **Activate** button adjacent to the input box.
+6. You are all setup. Happy printing!
+
+## Report problems
+
+If something does not appear to be working correctly and you think you may have found a bug in the OctoPrint-Mattacloud Plugin, please create an issue on the official page [here](https://github.com/dougbrion/OctoPrint-Mattacloud/issues). In this way your issue can be understood and fixed quickly.
+
+Or feel free to contact us via [whatsthematta@mattalabs.com](mailto:whatsthematta@mattalabs.com).
+
 ### Error detection and process monitoring
 
 3D printers are not the most reliable of machines. All of us have suffered from errors whilst printing and many users find themselves _handcuffed_ to their printers, having to constantly check the printer every 5 minutes to make sure that the print is _still_ okay! If this sounds familiar to you... hopefully this plugin will help.
 
 Numerous computer vision techniques are used to determine if an error has occurred during your 3D print. Using a mixture of machine learning, 3D printing heuristics and the direct comparison of g-code to the current state of the 3D print, an errors are reliably determined in an image of the print.
 
-Errors that are currently detected reliably:
+<p align="center">
+    <img src="extras/images/ai_detection.jpg" alt="Mattacloud - AI Error Detection">
+    <br/>
+    <i>Personal and industrial versions of Mattacloud come with state-of-the-art AI error detection.</i>
+    <br/>
+</p>
+
+Errors that the personal and industrial plans are capable of detecting are:
 
 - Detatchment from print bed
 - Offset
@@ -26,6 +74,8 @@ Errors that are currently detected reliably:
 - Spaghetti
 - Blocked extruder / out of filament
 - Hotend too close to print bed
+
+At present, the Beta plan does not support error detection.
 
 ### Remote control and management
 
@@ -47,7 +97,7 @@ At present, the plugin enables you to do the following:
 <p align="center">
     <img src="extras/images/communication.png" alt="Mattacloud - Communication">
     <br/>
-    <i>Keep informed by receiving notifications and updates from the <b>mattacloud</b> to your device.</i>
+    <i>Keep informed by receiving notifications and updates from the <b>Mattacloud</b> to your device.</i>
     <br/>
 </p>
 
@@ -55,35 +105,10 @@ By installing this plugin and linking a printer to your **mattacloud** account, 
 
 The communication channels which are currently supported are:
 
-- Email
-- SMS (Beta)
-- WhatsApp (Beta)
-- Facebook Messenger (Beta)
-
-## Plugin Installation
-
-Install via the bundled [OctoPrint Plugin Manager](https://github.com/foosel/OctoPrint/wiki/Plugin:-Plugin-Manager)
-or manually using this URL:
-
-    https://github.com/dougbrion/OctoPrint-Mattacloud/archive/master.zip
-
-After downloading the zip file of the latest release, install it using the OctoPrint Plugin Manager.
-
-## Setup
-
-The setup progress takes less than 5 minutes and consists of 5 simple steps. If you follow these, all the benefits of **Mattacloud** will apply to your printer. Happy printing!
-
-1. Join the **Mattacloud** free trial ([here](https://cloud.mattalabs.com/accounts/signup/)) or https://cloud.mattalabs.com/accounts/signup/if you already have, just [login](https://cloud.mattalabs.com/accounts/login/). (Free trial lasts for the duration of beta testing.)
-2. Select your membership type - at this stage it is recommended to choose the free beta membership.
-3. Add a printer to your **Mattacloud** by following the wizard and setup guide.
-4. After installing the OctoPrint-Mattacloud Plugin on your OctoPrint enabled device, copy the authentication token from your newly created printer on the **Mattacloud** into the authentication token input box presented in the OctoPrint-Mattacloud Plugin tab. You can see all of your printers and their respective tokens [here](https://cloud.mattalabs.com/printer-dashboard/).
-5. Test your token using the _Test Token_ button adjacent to the input box.
-
-## Report problems
-
-If something does not appear to be working correctly and you think you may have found a bug in the OctoPrint-Mattacloud Plugin, please create an issue on the official page [here](https://github.com/dougbrion/OctoPrint-Mattacloud/issues). In this way your issue can be understood and fixed quickly.
-
-## Data
+- Email (in Beta plan)
+- SMS (personal and industrial plans)
+- WhatsApp (personal and industrial plans)
+- Facebook Messenger (personal and industrial plans)
 
 ## License
 

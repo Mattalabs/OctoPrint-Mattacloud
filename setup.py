@@ -35,10 +35,11 @@ plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = [
-    "requests-toolbelt",
-    "aiohttp",
-    "aiortc",
-    "opencv-python",
+    "requests-toolbelt==0.9.1",
+    "aiohttp==3.6.2",
+    "aiortc==0.9.28",
+    "numpy==1.19.1",
+    "opencv-python==4.1.1.26",
 ]
 
 # --------------------------------------------------------------------------------------------------------------------

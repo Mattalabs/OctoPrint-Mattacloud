@@ -24,16 +24,17 @@ async def offer(request):
 
     @pc.on("iceconnectionstatechange")
     async def on_iceconnectionstatechange():
-        print("ICE connection state is %s" % pc.iceConnectionState)
         if pc.iceConnectionState == "failed":
             await pc.close()
             pcs.discard(pc)
 
-    options = {"framerate": "30", "video_size": "1280x720"}
+    options = {"framerate": "5", "video_size": "640x360"}
     if platform.system() == "Darwin":
-        player = MediaPlayer("http://localhost:8080/?action=stream")
+        player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
+        # player = MediaPlayer("default:none", format="avfoundation", options=options)
     else:
-        player = MediaPlayer("http://localhost:8080/?action=stream")
+        player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
+        # player = MediaPlayer("/dev/video0", format="v4l2", options=options)
 
     await pc.setRemoteDescription(offer)
     for t in pc.getTransceivers():
@@ -53,8 +54,18 @@ async def offer(request):
     )
 
 
-pcs = set()
+async def close(request):
+    coros = [pc.close() for pc in pcs]
+    await asyncio.gather(*coros)
+    pcs.clear()
+    return web.Response(
+        content_type="application/json",
+        text=json.dumps(
+            {"status": "success"}
+        ),
+    )
 
+pcs = set()
 
 async def on_shutdown(app):
     # close peer connections
@@ -68,13 +79,14 @@ class WebRTCServer:
         self.app = web.Application()
         self.app.on_shutdown.append(on_shutdown)
         self.app.router.add_post("/offer", offer)
+        self.app.router.add_post("/close", close)
         self.runner = None
 
     async def start(self):
         port = 8888
         self.runner = web.AppRunner(self.app)
         await self.runner.setup()
-        site = web.TCPSite(self.runner, '0.0.0.0', port, ssl_context=None)
+        site = web.TCPSite(self.runner, '127.0.0.1', port, ssl_context=None)
         await site.start()
     
     async def stop(self):
