@@ -13,7 +13,12 @@ import threading
 import time
 import logging
 import re
-import asyncio
+import sys
+
+try:
+    import asyncio
+except ImportError:
+    pass
 
 import flask
 import requests
@@ -28,7 +33,10 @@ from octoprint.util import to_bytes, to_unicode
 from .ws import Socket
 from .printer import Printer
 from .backoff import BackoffTime
-from .webcam import webrtc_loop
+try:
+    from .webcam import webrtc_loop
+except SyntaxError as e:
+    pass
 
 class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                        octoprint.plugin.SettingsPlugin,
@@ -47,12 +55,10 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         self.ws_data_count = 0
         self.loop_time = 1.0
         self.ws_loop_time = 60
+        self.base_url = "https://cloud.mattalabs.com/"
         self.sentry = sentry_sdk.init(
             "https://878e280471064d3786d9bcd063e46ad7@sentry.io/1850943"
         )
-        loop = asyncio.new_event_loop()
-        webrtc_thread = threading.Thread(target=webrtc_loop, args=(loop,), daemon=True)
-        webrtc_thread.start()
 
     def get_settings_defaults(self):
         return dict(
@@ -110,11 +116,11 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
     # TODO: Improve URL creation
     # Should write a urljoin function
     def get_base_url(self):
-        if not self._settings.get(["base_url"]):
+        if not self.base_url:
             self._logger.warning("No base URL in OctoPrint settings")
             return None
 
-        url = self._settings.get(["base_url"])
+        url = self.base_url
         url = url.strip()
         if url.startswith("/"):
             url = url[1:]
@@ -179,6 +185,12 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         ws_data_thread = threading.Thread(target=self.ws_send_data)
         ws_data_thread.daemon = True
         ws_data_thread.start()
+        try:
+            loop = asyncio.new_event_loop()
+            webrtc_thread = threading.Thread(target=webrtc_loop, args=(loop,), daemon=True)
+            webrtc_thread.start()
+        except Exception as e:
+            self._logger.error(e)
 
     def event_ws_data(self, event, payload):
         data = self.ws_data()
@@ -258,7 +270,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                     self._logger.error("ws_send_data: %s", e)
                     pass
 
-    def ws_connect(self):
+    def ws_connect(self, wait=True):
         self._logger.info("Connecting websocket")
         try:
             self.ws = Socket(
@@ -274,7 +286,8 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             ws_thread = threading.Thread(target=self.ws.run)
             ws_thread.daemon = True
             ws_thread.start()
-            time.sleep(3)
+            if wait:
+                time.sleep(3)
         except Exception as e:
             self._logger.error("ws_on_close: %s", e)
             pass
@@ -520,7 +533,6 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                     webrtc_resp = {
                         "webrtc_reply_printer_server": json.loads(resp.content)
                     }
-                    self._logger.info("Sending \"webrtc_reply_printer_server\" cmd")
                     msg = self.ws_data(extra_data=webrtc_resp)
                     self.ws.send_msg(msg)
                 except requests.exceptions.RequestException as e:
@@ -763,6 +775,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                 self._settings.set(["authorization_token"],
                                    auth_token, force=True)
                 self._settings.save(force=True)
+                self.ws_connect(wait=False)
             return flask.jsonify({"success": success, "text": status_text})
         if command == "ws_reconnect":
             self.ws_connect()
@@ -815,7 +828,6 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                 "Testing authorization token: %s, URL: %s, Headers %s",
                 e, url, self.make_auth_header())
             status_text = "Error. Please check OctoPrint\'s internet connection"
-            # TODO: Catch the correct exceptions
         return success, status_text
 
     def is_new_job(self):

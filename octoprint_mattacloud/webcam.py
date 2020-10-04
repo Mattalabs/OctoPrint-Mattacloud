@@ -1,20 +1,20 @@
-import asyncio
 import json
 import logging
 import os
 import platform
 import threading
-
 import time
-from aiohttp import web
-
-from aiortc import RTCPeerConnection, RTCSessionDescription
-from aiortc.contrib.media import MediaPlayer
 import logging
 
-_logger = logging.getLogger("octoprint.plugins.mattacloud")
+try:
+    import asyncio
+    from aiohttp import web
+    from aiortc import RTCPeerConnection, RTCSessionDescription
+    from aiortc.contrib.media import MediaPlayer
+except ImportError:
+    pass
 
-ROOT = os.path.dirname(__file__)
+_logger = logging.getLogger("octoprint.plugins.mattacloud")
 
 async def offer(request):
     params = await request.json()
@@ -28,13 +28,10 @@ async def offer(request):
             await pc.close()
             pcs.discard(pc)
 
-    options = {"framerate": "5", "video_size": "640x360"}
     if platform.system() == "Darwin":
         player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
-        # player = MediaPlayer("default:none", format="avfoundation", options=options)
     else:
         player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
-        # player = MediaPlayer("/dev/video0", format="v4l2", options=options)
 
     await pc.setRemoteDescription(offer)
     for t in pc.getTransceivers():

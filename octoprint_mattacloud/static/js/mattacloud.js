@@ -13,7 +13,6 @@ $(function() {
     var data = {
       command: "test_auth_token",
       auth_token: document.getElementById("settings_token_input").value,
-      url: document.getElementById("settings_url_input").value
     };
     $.ajax({
       url: "./api/plugin/mattacloud",
@@ -50,9 +49,7 @@ $(function() {
     self.settings = parameters[1];
 
     self.auth_token = ko.observable();
-    self.server_address = ko.observable();
     self.enabled_value = ko.observable();
-    self.config_print = ko.observable();
     self.ws_connected = ko.observable();
 
     self.num_cameras = ko.observable();
@@ -75,9 +72,9 @@ $(function() {
       self.settings.settings.plugins.mattacloud.authorization_token(new_token);
     });
 
-    self.server_address.subscribe(function(new_server_url) {
-      self.settings.settings.plugins.mattacloud.base_url(new_server_url);
-    });
+    // self.server_address.subscribe(function(new_server_url) {
+    //   self.settings.settings.plugins.mattacloud.base_url(new_server_url);
+    // });
 
     self.num_cameras.subscribe(function(num_cams) {
       self.settings.settings.plugins.mattacloud.num_cameras(num_cams);
@@ -132,7 +129,7 @@ $(function() {
         success: function(result) {
           var status = "Disconnected.";
           if (result.success) {
-            status = "Connected to the mattacloud.";
+            status = "Connected to the Mattacloud.";
             new PNotify({
               title: gettext("Connection"),
               text: gettext(result.text),
@@ -154,9 +151,6 @@ $(function() {
 
     self.enabled = ko.pureComputed(function() {
       if (self.enabled_value()) {
-        if (self.config_print()) {
-          return "Mattacloud - Running (Config Print)";
-        }
         return "Mattacloud - Running";
       }
       return "Mattacloud - Disabled";
@@ -169,9 +163,6 @@ $(function() {
 
     self.status = ko.pureComputed(function() {
       if (self.enabled_value()) {
-        if (self.config_print()) {
-          return "Mattacloud is enabled, idle and set to run a configuration print.";
-        }
         return "Mattacloud is enabled and idle.";
       }
       return "Mattacloud is disabled.";
@@ -181,7 +172,6 @@ $(function() {
       var data = {
         command: "set_enabled"
       };
-      console.log("Toggling mattacloud.");
       $.ajax({
         url: "./api/plugin/mattacloud",
         type: "POST",
@@ -196,29 +186,9 @@ $(function() {
       return true;
     };
 
-    self.set_config_print = function() {
-      console.log("Config Print");
-      var data = {
-        command: "set_config_print"
-      };
-      $.ajax({
-        url: "./api/plugin/mattacloud",
-        type: "POST",
-        data: JSON.stringify(data),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(status) {
-          console.log("Config " + status.config_print_enabled);
-          self.config_print(status.config_print_enabled);
-        }
-      });
-      return true;
-    };
-
     update_status_text = function() {
       var status_text = "Disconnected.";
       if (self.ws_connected()) {
-        console.log(self.ws_connected());
         status_text = "Connected to the mattacloud.";
       }
       self.ws_status(status_text);
@@ -227,10 +197,6 @@ $(function() {
     self.onBeforeBinding = function() {
       self.auth_token(
         self.settings.settings.plugins.mattacloud.authorization_token()
-      );
-      self.server_address(self.settings.settings.plugins.mattacloud.base_url());
-      self.config_print(
-        self.settings.settings.plugins.mattacloud.config_print()
       );
       self.enabled_value(self.settings.settings.plugins.mattacloud.enabled());
       self.ws_connected(
