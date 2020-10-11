@@ -34,13 +34,18 @@ plugin_url = "https://github.com/Mattalabs/OctoPrint-Mattacloud"
 plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
+import sys
 plugin_requires = [
     "requests-toolbelt==0.9.1",
-    "aiohttp==3.6.2",
-    "aiortc==0.9.28",
-    "numpy==1.19.1",
-    "opencv-python==4.1.1.26",
 ]
+if (sys.version_info > (3, 0)):
+    plugin_requires += [
+        "aiohttp==3.6.2",
+        "aiortc==0.9.28",
+        "numpy==1.19.1",
+        "opencv-python>=4.1.0,<=4.4.0",
+    ]
+
 
 # --------------------------------------------------------------------------------------------------------------------
 # More advanced options that you usually shouldn't have to touch follow after this point
