@@ -43,7 +43,7 @@ if (sys.version_info > (3, 0)):
         "aiohttp==3.6.2",
         "aiortc==0.9.28",
         "numpy==1.19.1",
-        "opencv-python>=4.1.0,<=4.4.0",
+        "opencv-python==4.4.0.40",
     ]
 
 
