@@ -18,14 +18,12 @@ tags:
 - remote monitoring
 - cloud printing
 - webcam
-- task queue
-- control
+- print queue
 - remote control
-- print local files
-- addon
 - ai
 - machine learning
 - error detection
+- beta
 
 screenshots:
 - url: /assets/img/plugins/mattacloud/mattacloud.png
@@ -43,7 +41,7 @@ featuredimage: /assets/img/plugins/mattacloud/mattacloud.png
 compatibility:
 
   octoprint:
-  - 1.3.2+
+  - 1.3.2
 
   os:
   - linux
@@ -63,7 +61,7 @@ Learn more about **Mattacloud** and its features - [https://mattalabs.com/produc
 
 _Note: **Mattacloud** is currently still in development so users may experience changes and errors during use._
 
-## Printer Setup
+### Printer Setup
 
 The setup progress takes less than 5 minutes and consists of 5 simple steps. If you follow these, all the benefits of **Mattacloud** will apply to your printer. Happy printing!
 
@@ -74,7 +72,7 @@ The setup progress takes less than 5 minutes and consists of 5 simple steps. If 
 5. Test your token using the **Activate** button adjacent to the input box.
 6. You are all setup. Happy printing!
 
-## Installation with WebRTC for live video streams
+### Installation with WebRTC for live video streams
 
 OctoPrint-Mattacloud uses WebRTC to enable real-time video streams from the printer to your device. In order to utilise this capability a few additional packages need to be installed on your Raspberry Pi (or other device) running OctoPrint. These packages are not required for using the main features of the plugin.
 
@@ -100,7 +98,7 @@ pip install -r webrtc_requirements.txt
 
 When the plugin has installed, restart OctoPrint and begin the Printer Setup process outlined below.
 
-## Report problems
+### Report problems
 
 If something does not appear to be working correctly and you think you may have found a bug in the OctoPrint-Mattacloud Plugin, please create an issue on the official page [here](https://github.com/dougbrion/OctoPrint-Mattacloud/issues). In this way your issue can be understood and fixed quickly.
 
@@ -150,6 +148,6 @@ The communication channels which are currently supported are:
 - WhatsApp (personal and industrial plans)
 - Facebook Messenger (personal and industrial plans)
 
-## License
+### License
 
 View the [OctoPrint-Mattacloud plugin license](https://github.com/Mattalabs/OctoPrint-Mattacloud/blob/master/LICENSE)
