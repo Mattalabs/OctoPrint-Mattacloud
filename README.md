@@ -130,7 +130,7 @@ At present, the plugin enables you to do the following:
     <br/>
 </p>
 
-By installing this plugin and linking a printer to your **mattacloud** account, you can receive useful notifications and updates concerning your 3D printer via various channels. When an error occurs during the 3D printing process, you will receive an alert with an attached image showing the error in addition to current progress, material usage and other useful statistics; you can then deside to take action. Additionally, you can also set up other checkpoints to receive notifications, such as upon object completion, or when a print has reached the half way mark. 
+By installing this plugin and linking a printer to your **Mattacloud** account, you can receive useful notifications and updates concerning your 3D printer via various channels. When an error occurs during the 3D printing process, you will receive an alert with an attached image showing the error in addition to current progress, material usage and other useful statistics; you can then deside to take action. Additionally, you can also set up other checkpoints to receive notifications, such as upon object completion, or when a print has reached the half way mark. 
 
 The communication channels which are currently supported are:
 
@@ -141,4 +141,4 @@ The communication channels which are currently supported are:
 
 ## License
 
-View the [OctoPrint-Mattacloud plugin license](https://github.com/dougbrion/OctoPrint-Mattacloud/blob/master/LICENSE)
+View the [OctoPrint-Mattacloud plugin license](https://github.com/Mattalabs/OctoPrint-Mattacloud/blob/master/LICENSE)
