@@ -1,36 +1,65 @@
-# OctoPrint-Mattacloud
+# OctoPrint-Mattacloud (Beta)
+
+Full remote control, management and access from anywhere in addition to automatic and intelligent error detection and process monitoring for your OctoPrint-enabled 3D printer. Additionally, receive notifications and updates alerting you of failures and keeping you updated on the state of your 3D print. Overview your print history and gain insights into filament use, print times and your printer reliability.
 
 <p align="center">
-    <img src="extras/images/mattacloud.png" alt="Mattacloud by Mattalabs">
+    <img src="extras/images/mattacloud.png" alt="Add complete remote control and monitoring and AI error detection to your 3D printer with Mattacloud by Mattalabs">
     <br/>
-    <i>Add complete remote control and monitoring and A.I. error detection to your 3D printer.</i>
     <br/>
 </p>
 
-Automatic and intelligent error detection and process monitoring for your OctoPrint-enabled 3D printer, with full remote control, management and access from anywhere. Additionally, receive notifications and updates via your chosen communication medium, alerting you of failures and keeping you updated on the state of the 3D print. Overview your print history and gain insights into filament use, print times and your printer reliability.
-
 Learn more about **Mattacloud** and its features - [https://mattalabs.com/products/mattacloud/](https://mattalabs.com/products/mattacloud/)
+
+_Note: **Mattacloud** is currently still in development so users may experience changes and errors during use._
 
 ## Plugin Installation
 
+You can get OctoPrint-Mattacloud in numerous ways:
+
+- Via the OctoPrint plugin manager
+- Installing from GitHub / source using `pip`
+- Downloading `MattaPi` the pre-made SD card image
+
+Due to Python 2's EOL status, we recommend running OctoPrint-Mattacloud with **Python 3**; however, it will still work with Python 2 (although not with live video streaming using WebRTC). If you are still running OctoPrint with Python 2 you should probably upgrade anyway, so why not upgrade now. Here is a blog post outlining the upgrading process [https://octoprint.org/blog/2020/09/10/upgrade-to-py3/](https://octoprint.org/blog/2020/09/10/upgrade-to-py3/).
+
+### Using OctoPrints plugin manager
+
+First go to `OctoPrint settings` and then in the side tab to `Plugin Manager`. Click on `Get More...` plugins and search for "Mattacloud", then click install. That's it! If you want to have access to live video streams of your 3D printer camera you need to be using Python and require additional setup for WebRTC (see below).
+
+### Installation using `PyPi`
+
+You can also install using `pip` from the GitHub repo.
+
+```
+pip install git+https://github.com/Mattalabs/OctoPrint-Mattacloud/archive/master.zip
+```
+
+### Mattapi SD card image
+
 The easiest way to get OctoPrint-Mattacloud is to download the Raspbian based SD card image for the Raspberry Pi which contains OctoPrint along with everything required for Mattacloud to run smoothly. The image also uses Python 3, so if you need to upgrade from Python 2 why not check it out!
 
-Due to Python 2's EOL status, OctoPrint-Mattacloud requires you to be running **Python 3**. If you are still running OctoPrint with Python 2 you should probably upgrade anyway. Here is a blog post outlining the upgrading process [https://octoprint.org/blog/2020/09/10/upgrade-to-py3/](https://octoprint.org/blog/2020/09/10/upgrade-to-py3/).
+### Installation with WebRTC for live video streams
 
-OctoPrint-Mattacloud uses WebRTC to enable real-time video streams from the printer to your device. In order to utilise this capability a few additional packages need to be installed on your Raspberry Pi (or other device) running OctoPrint.
+OctoPrint-Mattacloud uses WebRTC to enable real-time video streams from the printer to your device. In order to utilise this capability a few additional packages need to be installed on your Raspberry Pi (or other device) running OctoPrint. These packages are not required for using the main features of the plugin.
 
 If you are not using the Mattacloud SD image then you need to install the following packages:
 
 ```
-sudo apt-get install python-dev python3-dev libsrtp2-dev libxml2-dev libxslt-dev
+sudo apt-get install libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libavfilter-dev libswscale-dev libswresample-dev python-dev python3-dev libsrtp2-dev libsrtp2-1 libopus-dev libvpx-dev pkg-config
 ```
 
-Currently, the OctoPrint-Mattacloud plugin has not been uploaded to OctoPrint plugin repository, and as such requires manual installation from this GitHub repo.
+These packages are required for OpenCV and are also needed to build `pylibsrtp` a requirement of `aiortc` for WebRTC.
 
-Activate your Python 3 virtualenv where OctoPrint is installed. It will be something like ```source oprint/bin/activate```. Then install the plugin.
+Once you have installed the above packages you can activate your Python 3 virtualenv where OctoPrint is installed. It will be something like ```source oprint/bin/activate```. Then install the following using `pip`:
 
 ```
-pip install git+https://github.com/Mattalabs/OctoPrint-Mattacloud
+pip install aiohttp==3.6.2 aiortc==0.9.7 numpy==1.19.1 opencv-python==4.4.0.40
+```
+
+or if you have the plugin downloaded / cloned you can use:
+
+```
+pip install -r webrtc_requirements.txt
 ```
 
 When the plugin has installed, restart OctoPrint and begin the Printer Setup process outlined below.
