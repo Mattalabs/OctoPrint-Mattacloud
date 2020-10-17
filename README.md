@@ -22,7 +22,7 @@ OctoPrint-Mattacloud uses WebRTC to enable real-time video streams from the prin
 If you are not using the Mattacloud SD image then you need to install the following packages:
 
 ```
-sudo apt install libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libavfilter-dev libswscale-dev libswresample-dev python-dev python3-dev libsrtp2-dev libsrtp2-1 libopus-dev libvpx-dev pkg-config
+sudo apt-get install python-dev python3-dev libsrtp2-dev libxml2-dev libxslt-dev
 ```
 
 Currently, the OctoPrint-Mattacloud plugin has not been uploaded to OctoPrint plugin repository, and as such requires manual installation from this GitHub repo.
