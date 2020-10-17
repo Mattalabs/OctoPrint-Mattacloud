@@ -23,7 +23,6 @@ except ImportError:
 import flask
 import requests
 from requests_toolbelt import MultipartEncoder
-import sentry_sdk
 
 import octoprint.plugin
 from octoprint.filemanager import FileDestinations
@@ -56,9 +55,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         self.loop_time = 1.0
         self.ws_loop_time = 60
         self.base_url = "https://cloud.mattalabs.com/"
-        self.sentry = sentry_sdk.init(
-            "https://878e280471064d3786d9bcd063e46ad7@sentry.io/1850943"
-        )
+        self.webrtc_setup = False
 
     def get_settings_defaults(self):
         return dict(
@@ -186,7 +183,9 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             loop = asyncio.new_event_loop()
             webrtc_thread = threading.Thread(target=webrtc_loop, args=(loop,), daemon=True)
             webrtc_thread.start()
+            self.webrtc_setup = True
         except Exception as e:
+            self.webrtc_setup = False
             self._logger.error(e)
 
     def event_ws_data(self, event, payload):
@@ -515,22 +514,30 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                             json_msg["type"].lower())
             if json_msg["cmd"].lower() == "webrtc_start_server_printer":
                 self._logger.info("Received \"webrtc_start_server_printer\" cmd")
-                try:
-                    resp = requests.post(
-                        url="http://127.0.0.1:8888/offer",
-                        data=json.dumps(json_msg),
-                        headers={
-                            'Content-Type': 'application/json'
-                        },
-                    )
-                    resp.raise_for_status()
+                if self.webrtc_setup:
+                    try:
+                        resp = requests.post(
+                            url="http://127.0.0.1:8888/offer",
+                            data=json.dumps(json_msg),
+                            headers={
+                                'Content-Type': 'application/json'
+                            },
+                        )
+                        resp.raise_for_status()
+                        webrtc_resp = {
+                            "webrtc_reply_printer_server": json.loads(resp.content)
+                        }
+                        msg = self.ws_data(extra_data=webrtc_resp)
+                        self.ws.send_msg(msg)
+                    except requests.exceptions.RequestException as e:
+                        self._logger.error(e)
+                else:
                     webrtc_resp = {
-                        "webrtc_reply_printer_server": json.loads(resp.content)
+                        "webrtc_reply_printer_server": "failed",
                     }
                     msg = self.ws_data(extra_data=webrtc_resp)
                     self.ws.send_msg(msg)
-                except requests.exceptions.RequestException as e:
-                    self._logger.error(e)
+
 
 
     def process_response(self, resp):
