@@ -89,10 +89,10 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         return dict(mattacloud=dict(
             displayVersion=self._plugin_version,
             type='github_release',
-            user='dougbrion',
+            user='Mattalabs',
             repo='OctoPrint-Mattacloud',
             current=self._plugin_version,
-            pip='https://github.com/dougbrion/OctoPrint-Mattacloud/archive/{target_version}.zip',
+            pip='https://github.com/Mattalabs/OctoPrint-Mattacloud/archive/{target_version}.zip',
         ))
 
     def get_printer_data(self):
