@@ -12,14 +12,14 @@ plugin_package = "octoprint_mattacloud"
 
 # The plugin's human readable name. Can be overwritten within OctoPrint's internal data via __plugin_name__ in the
 # plugin module
-plugin_name = "OctoPrint-Mattacloud"
+plugin_name = "Mattacloud (Beta)"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
 plugin_version = "0.1.0"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
-plugin_description = """Remote 3D printer management for OctoPrint with AI error detection"""
+plugin_description = """Making 3D printers intelligent. Remote 3D printer control and management from anywhere with advanced AI error detection and informative notifications."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
 plugin_author = "Mattalabs"
