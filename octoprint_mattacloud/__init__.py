@@ -66,15 +66,12 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             base_url="https://cloud.mattalabs.com/",
             authorization_token="e.g. w1il4li2am2ca1xt4on91",
             upload_dir="/home/pi/.octoprint/uploads/",
-            config_print=False,
             ws_connected=False,
             num_cameras=1,
-            camera_interval_1=3,
+            camera_interval_1=10,
             camera_interval_2=10,
             snapshot_url_1='http://localhost:8080/?action=snapshot',
             snapshot_url_2='http://localhost:8081/?action=snapshot',
-            vibration_interval=10,
-            temperature_interval=1,
         )
 
     def get_assets(self):
@@ -85,7 +82,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         )
 
     def get_template_configs(self):
-        self._logger.info(
+        self._logger.debug(
             "OctoPrint-Mattacloud - is loading template configurations.")
         return [
             dict(type="settings", custom_bindings=True)
@@ -217,9 +214,6 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
 
     def is_setup_complete(self):
         return self.get_base_url() and self.get_auth_token()
-
-    def is_config_print(self):
-        return self._settings.get(["config_print"])
 
     def has_job(self):
         if (self._printer.is_printing() or
@@ -760,7 +754,6 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         return dict(
             test_auth_token=["auth_token"],
             set_enabled=[],
-            set_config_print=[],
             ws_reconnect=[],
         )
 
@@ -795,13 +788,6 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             self._settings.save(force=True)
             is_enabled = self._settings.get(["enabled"])
             return flask.jsonify({"success": True, "enabled": is_enabled})
-        if command == "set_config_print":
-            previous_config_print = self._settings.get(["config_print"])
-            self._settings.set(
-                ["config_print"], not previous_config_print, force=True)
-            self._settings.save(force=True)
-            is_config_print = not previous_config_print
-            return flask.jsonify({"success": True, "config_print_enabled": is_config_print})
 
     def test_auth_token(self, token):
         # TODO: Returns Success if the token is an empty string!!!!

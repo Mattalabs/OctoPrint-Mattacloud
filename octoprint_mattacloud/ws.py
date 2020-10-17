@@ -24,7 +24,7 @@ class Socket():
 
     def on_close(self):
         # TODO: handle websocket errors
-        _logger.info("Closing the websocket...")
+        _logger.debug("Closing the websocket...")
         self.disconnect()
 
     def run(self):
@@ -58,7 +58,7 @@ class Socket():
                                              )
 
     def disconnect(self):
-        _logger.info("Disconnecting the websocket...")
+        _logger.debug("Disconnecting the websocket...")
         self.socket.keep_running = False
         self.socket.close()
-        _logger.info("The websocket has been closed.")
+        _logger.debug("The websocket has been closed.")
