@@ -90,7 +90,7 @@ Numerous computer vision techniques are used to determine if an error has occurr
 <p align="center">
     <img src="extras/images/ai_detection.jpg" alt="Mattacloud - AI Error Detection">
     <br/>
-    <i>Personal and industrial versions of Mattacloud come with state-of-the-art AI error detection.</i>
+    <i>Personal and industrial versions of Mattacloud come with state-of-the-art AI error detection (still being tested internally).</i>
     <br/>
 </p>
 
@@ -104,7 +104,7 @@ Errors that the personal and industrial plans are capable of detecting are:
 - Blocked extruder / out of filament
 - Hotend too close to print bed
 
-At present, the Beta plan does not support error detection.
+At present, the Beta plan does not support error detection as we are still testing our AI models in house.
 
 ### Remote control and management
 
