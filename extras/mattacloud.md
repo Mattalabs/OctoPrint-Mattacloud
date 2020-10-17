@@ -31,7 +31,7 @@ screenshots:
 - url: /assets/img/plugins/mattacloud/mattacloud.png
   alt: Mattacloud Plugin - Add complete remote control and monitoring and AI error detection to your 3D printer with Mattacloud by Mattalabs
   caption: Add complete remote control and monitoring and AI error detection to your 3D printer
-- url: /assets/img/plugins/mattacloud/ai_detection.png
+- url: /assets/img/plugins/mattacloud/ai_detection.jpg
   alt: Mattacloud Plugin - AI Error Detection
   caption: Personal and industrial versions of Mattacloud come with state-of-the-art AI error detection (still being tested internally).
 - url: /assets/img/plugins/mattacloud/communication.png
