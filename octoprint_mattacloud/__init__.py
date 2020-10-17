@@ -912,7 +912,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             time.sleep(self.loop_time)
 
 
-__plugin_name__ = "Mattacloud"
+__plugin_name__ = "Mattacloud (Beta)"
 __plugin_pythoncompat__ = ">=2.7,<4"
 
 def __plugin_load__():
