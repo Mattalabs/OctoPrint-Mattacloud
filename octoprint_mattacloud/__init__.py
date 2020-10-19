@@ -113,7 +113,6 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         if not self.base_url:
             self._logger.warning("No base URL in OctoPrint settings")
             return None
-
         url = self.base_url
         url = url.strip()
         if url.startswith("/"):
@@ -888,7 +887,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                 if self.has_job() and num_cameras > 0:
                     camera_interval_1 = int(
                         self._settings.get(["camera_interval_1"]))
-                    if (camera_count_1 * self.loop_time) > camera_interval_1:
+                    if (camera_count_1 * self.loop_time) > camera_interval_1 and (camera_count_1 * self.loop_time) > 5:
                         snapshot_url = self._settings.get(["snapshot_url_1"])
                         filename, img = self.camera_snapshot(snapshot_url)
                         if filename and img:
@@ -899,7 +898,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                     if num_cameras > 1:
                         camera_interval_2 = int(
                             self._settings.get(["camera_interval_2"]))
-                        if (camera_count_2 * self.loop_time) > camera_interval_2:
+                        if (camera_count_2 * self.loop_time) > camera_interval_2 and (camera_count_2 * self.loop_time) > 5:
                             snapshot_url = self._settings.get(
                                 ["snapshot_url_2"])
                             filename, img = self.camera_snapshot(
