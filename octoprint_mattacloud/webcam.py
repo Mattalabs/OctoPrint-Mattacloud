@@ -27,17 +27,15 @@ async def offer(request):
         if pc.iceConnectionState == "failed":
             await pc.close()
             pcs.discard(pc)
-
+    options = {"framerate": params["framerate"], "video_size": params["video_size"]}
     if platform.system() == "Darwin":
-        player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
+        player = MediaPlayer("http://127.0.0.1:8080/?action=stream", options=options)
     else:
-        player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
+        player = MediaPlayer("http://127.0.0.1:8080/?action=stream", options=options)
 
     await pc.setRemoteDescription(offer)
     for t in pc.getTransceivers():
-        if t.kind == "audio" and player.audio:
-            pc.addTrack(player.audio)
-        elif t.kind == "video" and player.video:
+        if t.kind == "video" and player.video:
             pc.addTrack(player.video)
 
     answer = await pc.createAnswer()
