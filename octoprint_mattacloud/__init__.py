@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # coding = utf - 8
 
@@ -62,6 +61,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             enabled=True,
             base_url="https://cloud.mattalabs.com/",
             authorization_token="e.g. w1il4li2am2ca1xt4on91",
+            activated=False,
             upload_dir="/home/pi/.octoprint/uploads/",
             ws_connected=False,
             num_cameras=1,
@@ -156,6 +156,9 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         api_url = self.get_api_url()
         url = api_url + "/receive/request/"
         return url
+
+    def activated(self):
+        return self._settings.get(["activated"])
 
     def get_auth_token(self):
         if not self._settings.get(["authorization_token"]):
@@ -513,6 +516,8 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
                             json_msg["type"].lower())
             if json_msg["cmd"].lower() == "webrtc_start_server_printer":
                 self._logger.info("Received \"webrtc_start_server_printer\" cmd")
+                json_msg["video_size"] = "640x360"
+                json_msg["framerate"] = "10"
                 if self.webrtc_setup:
                     try:
                         resp = requests.post(
@@ -545,7 +550,10 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         value, params = cgi.parse_header(content_disposition)
         filename = params["filename"]
         filename = to_bytes(filename)
-        file_content = resp.text.replace("\\n", "\n")
+        file_content = resp.text
+        self._logger.info(resp.text)
+        # self._logger.info(resp.content)
+        # self._logger.info(resp)
         file_content = to_bytes(file_content)
         stream = io.BytesIO(file_content)
         stream_wrapper = StreamWrapper(filename, stream)

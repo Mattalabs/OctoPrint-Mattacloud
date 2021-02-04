@@ -1,20 +1,30 @@
+# -*- coding: utf-8 -*-
+# coding = utf - 8
+
 import json
 import logging
 import os
+import sys
 import platform
 import threading
 import time
 import logging
+import ctypes
+
+parent_dir = os.path.abspath(os.path.dirname(__file__))
+libsrtp_path = os.path.join(parent_dir, "webrtc_lib/libsrtp2.so.1")
+ctypes.cdll.LoadLibrary(libsrtp_path)
+
+_logger = logging.getLogger("octoprint.plugins.mattacloud")
 
 try:
     import asyncio
     from aiohttp import web
     from aiortc import RTCPeerConnection, RTCSessionDescription
     from aiortc.contrib.media import MediaPlayer
-except ImportError:
-    pass
+except ImportError as e:
+    _logger.error(e)
 
-_logger = logging.getLogger("octoprint.plugins.mattacloud")
 
 async def offer(request):
     params = await request.json()
@@ -27,17 +37,15 @@ async def offer(request):
         if pc.iceConnectionState == "failed":
             await pc.close()
             pcs.discard(pc)
-
+    options = {"framerate": params["framerate"], "video_size": params["video_size"]}
     if platform.system() == "Darwin":
-        player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
+        player = MediaPlayer("http://127.0.0.1:8080/?action=stream", options=options)
     else:
-        player = MediaPlayer("http://127.0.0.1:8080/?action=stream")
+        player = MediaPlayer("http://127.0.0.1:8080/?action=stream", options=options)
 
     await pc.setRemoteDescription(offer)
     for t in pc.getTransceivers():
-        if t.kind == "audio" and player.audio:
-            pc.addTrack(player.audio)
-        elif t.kind == "video" and player.video:
+        if t.kind == "video" and player.video:
             pc.addTrack(player.video)
 
     answer = await pc.createAnswer()

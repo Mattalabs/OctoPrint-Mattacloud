@@ -15,7 +15,7 @@ plugin_package = "octoprint_mattacloud"
 plugin_name = "Mattacloud Beta"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
-plugin_version = "0.1.1"
+plugin_version = "0.1.2"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
@@ -38,16 +38,15 @@ import sys
 plugin_requires = [
     "requests-toolbelt==0.9.1",
 ]
+
 extra_requires = {}
 if (sys.version_info > (3, 0)):
-    extra_requires = {
-        'webrtc': [
-            "aiohttp==3.6.2",
-            "aiortc==0.9.7",
-            "numpy==1.19.1",
-            "opencv-python==4.4.0.40",
-        ]
-}
+    plugin_requires += [
+        "aiohttp",
+        "aiortc",
+        "numpy",
+        "opencv-python",
+    ]
 
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -101,7 +100,7 @@ setup_parameters = octoprint_setuptools.create_plugin_setup_parameters(
     extra_requires=extra_requires,
     additional_packages=plugin_additional_packages,
     ignored_packages=plugin_ignored_packages,
-    additional_data=plugin_additional_data
+    additional_data=plugin_additional_data,
 )
 
 if len(additional_setup_parameters):

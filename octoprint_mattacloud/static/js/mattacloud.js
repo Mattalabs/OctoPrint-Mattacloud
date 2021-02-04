@@ -72,10 +72,6 @@ $(function() {
       self.settings.settings.plugins.mattacloud.authorization_token(new_token);
     });
 
-    // self.server_address.subscribe(function(new_server_url) {
-    //   self.settings.settings.plugins.mattacloud.base_url(new_server_url);
-    // });
-
     self.num_cameras.subscribe(function(num_cams) {
       self.settings.settings.plugins.mattacloud.num_cameras(num_cams);
       if (num_cams == 0) {
