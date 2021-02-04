@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # coding = utf - 8
 
@@ -54,7 +53,8 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         self.ws_data_count = 0
         self.loop_time = 1.0
         self.ws_loop_time = 60
-        self.base_url = "https://cloud.mattalabs.com/"
+        # self.base_url = "https://cloud.mattalabs.com/"
+        self.base_url = "http://192.168.1.103:8000/"
         self.webrtc_setup = False
 
     def get_settings_defaults(self):
@@ -518,7 +518,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
             if json_msg["cmd"].lower() == "webrtc_start_server_printer":
                 self._logger.info("Received \"webrtc_start_server_printer\" cmd")
                 json_msg["video_size"] = "640x360"
-                json_msg["framerate"] = "30"
+                json_msg["framerate"] = "10"
                 if self.webrtc_setup:
                     try:
                         resp = requests.post(

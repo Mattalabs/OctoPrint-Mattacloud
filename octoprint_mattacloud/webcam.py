@@ -1,20 +1,30 @@
+# -*- coding: utf-8 -*-
+# coding = utf - 8
+
 import json
 import logging
 import os
+import sys
 import platform
 import threading
 import time
 import logging
+import ctypes
+
+parent_dir = os.path.abspath(os.path.dirname(__file__))
+libsrtp_path = os.path.join(parent_dir, "webrtc_lib/libsrtp2.so.1")
+ctypes.cdll.LoadLibrary(libsrtp_path)
+
+_logger = logging.getLogger("octoprint.plugins.mattacloud")
 
 try:
     import asyncio
     from aiohttp import web
     from aiortc import RTCPeerConnection, RTCSessionDescription
     from aiortc.contrib.media import MediaPlayer
-except ImportError:
-    pass
+except ImportError as e:
+    _logger.error(e)
 
-_logger = logging.getLogger("octoprint.plugins.mattacloud")
 
 async def offer(request):
     params = await request.json()
