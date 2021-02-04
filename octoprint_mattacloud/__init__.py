@@ -53,8 +53,7 @@ class MattacloudPlugin(octoprint.plugin.StartupPlugin,
         self.ws_data_count = 0
         self.loop_time = 1.0
         self.ws_loop_time = 60
-        # self.base_url = "https://cloud.mattalabs.com/"
-        self.base_url = "http://192.168.1.103:8000/"
+        self.base_url = "https://cloud.mattalabs.com/"
         self.webrtc_setup = False
 
     def get_settings_defaults(self):
