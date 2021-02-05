@@ -11,11 +11,16 @@ import time
 import logging
 import ctypes
 
-parent_dir = os.path.abspath(os.path.dirname(__file__))
-libsrtp_path = os.path.join(parent_dir, "webrtc_lib/libsrtp2.so.1")
-ctypes.cdll.LoadLibrary(libsrtp_path)
+
 
 _logger = logging.getLogger("octoprint.plugins.mattacloud")
+
+try:
+    parent_dir = os.path.abspath(os.path.dirname(__file__))
+    libsrtp_path = os.path.join(parent_dir, "webrtc_lib/libsrtp2.so.1")
+    ctypes.cdll.LoadLibrary(libsrtp_path)
+except Exception as e:
+    _logger.error(e)
 
 try:
     import asyncio

@@ -2,3 +2,4 @@ include README.md
 recursive-include octoprint_mattacloud/templates *
 recursive-include octoprint_mattacloud/translations *
 recursive-include octoprint_mattacloud/static *
+recursive-include octoprint_mattacloud/webrtc_lib *
